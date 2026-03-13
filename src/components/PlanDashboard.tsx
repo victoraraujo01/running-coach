@@ -14,7 +14,6 @@ interface PlanDashboardProps {
   onSelectWeek: (index: number) => void;
   onReset: () => void;
   onStatusChange: (semanaIdx: number, treinoId: string, status: Status) => void;
-  onReorder: (semanaIdx: number, fromIndex: number, toIndex: number) => void;
   onMoveTreino: (sourceTreinoId: string, targetTreinoId: string, swap: boolean) => void;
 }
 
@@ -24,7 +23,6 @@ export function PlanDashboard({
   onSelectWeek,
   onReset,
   onStatusChange,
-  onReorder,
   onMoveTreino,
 }: PlanDashboardProps) {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -56,7 +54,6 @@ export function PlanDashboard({
           </h2>
           <SortableWorkoutList
             treinos={currentSemana.treinos}
-            onReorder={(from, to) => onReorder(selectedWeek, from, to)}
             onStatusChange={(treinoId, status) => onStatusChange(selectedWeek, treinoId, status)}
             onMove={handleMoveRequest}
           />

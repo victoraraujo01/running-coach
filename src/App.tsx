@@ -10,7 +10,6 @@ function App() {
     importPlano,
     resetPlano,
     updateTreinoStatus,
-    reorderTreinos,
     moveTreino,
   } = usePlano();
 
@@ -25,7 +24,6 @@ function App() {
       onSelectWeek={setSelectedWeek}
       onReset={resetPlano}
       onStatusChange={updateTreinoStatus}
-      onReorder={reorderTreinos}
       onMoveTreino={moveTreino}
     />
   );
