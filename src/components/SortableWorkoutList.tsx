@@ -21,9 +21,10 @@ interface SortableWorkoutListProps {
   treinos: Treino[];
   onReorder: (fromIndex: number, toIndex: number) => void;
   onStatusChange: (treinoId: string, status: Status) => void;
+  onMove: (treinoId: string) => void;
 }
 
-export function SortableWorkoutList({ treinos, onReorder, onStatusChange }: SortableWorkoutListProps) {
+export function SortableWorkoutList({ treinos, onReorder, onStatusChange, onMove }: SortableWorkoutListProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
@@ -55,6 +56,7 @@ export function SortableWorkoutList({ treinos, onReorder, onStatusChange }: Sort
               key={treino.id}
               treino={treino}
               onStatusChange={(status) => onStatusChange(treino.id, status)}
+              onMove={() => onMove(treino.id)}
             />
           ))}
         </div>
