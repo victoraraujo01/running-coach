@@ -1,5 +1,5 @@
 import type { Stats } from '../utils/stats';
-import { Check, X, Clock } from 'lucide-react';
+import { CircleCheck, CircleX, CircleDashed } from 'lucide-react';
 
 interface StatsBarProps {
   stats: Stats;
@@ -10,7 +10,7 @@ export function StatsBar({ stats }: StatsBarProps) {
     <div className="grid grid-cols-3 gap-3">
       <div className="flex items-center gap-2 bg-surface rounded-xl p-3">
         <div className="w-8 h-8 rounded-full bg-corrida/15 flex items-center justify-center">
-          <Check size={14} className="text-corrida" />
+          <CircleCheck size={16} className="text-corrida" />
         </div>
         <div>
           <p className="text-lg font-bold text-corrida">{stats.concluidos}</p>
@@ -20,7 +20,7 @@ export function StatsBar({ stats }: StatsBarProps) {
 
       <div className="flex items-center gap-2 bg-surface rounded-xl p-3">
         <div className="w-8 h-8 rounded-full bg-longo/15 flex items-center justify-center">
-          <X size={14} className="text-longo" />
+          <CircleX size={16} className="text-longo" />
         </div>
         <div>
           <p className="text-lg font-bold text-longo">{stats.perdidos}</p>
@@ -30,7 +30,7 @@ export function StatsBar({ stats }: StatsBarProps) {
 
       <div className="flex items-center gap-2 bg-surface rounded-xl p-3">
         <div className="w-8 h-8 rounded-full bg-descanso/15 flex items-center justify-center">
-          <Clock size={14} className="text-descanso" />
+          <CircleDashed size={16} className="text-descanso" />
         </div>
         <div>
           <p className="text-lg font-bold text-descanso">{stats.pendentes}</p>
