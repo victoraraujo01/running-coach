@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import type { Treino, Semana, Categoria } from '../types/plano';
 
 interface MoveModalProps {
@@ -19,6 +19,19 @@ const CATEGORY_COLORS: Record<Categoria, string> = {
 export function MoveModal({ isOpen, sourceTreino, semanas, onConfirm, onCancel }: MoveModalProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [swap, setSwap] = useState(true);
+  const sourceWeekRef = useRef<HTMLDivElement | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const sourceWeekIdx = sourceTreino
+    ? semanas.findIndex(s => s.treinos.some(t => t.id === sourceTreino.id))
+    : -1;
+
+  const sourceWeekCallback = useCallback((node: HTMLDivElement | null) => {
+    sourceWeekRef.current = node;
+    if (node && scrollContainerRef.current) {
+      node.scrollIntoView({ block: 'start' });
+    }
+  }, []);
 
   useEffect(() => {
     setSelectedId(null);
@@ -52,9 +65,9 @@ export function MoveModal({ isOpen, sourceTreino, semanas, onConfirm, onCancel }
         </div>
 
         {/* Calendar grid */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-4">
           {semanas.map((semana, semIdx) => (
-            <div key={semIdx} className="mb-4 last:mb-0">
+            <div key={semIdx} ref={semIdx === sourceWeekIdx ? sourceWeekCallback : undefined} className="mb-4 last:mb-0">
               <h4 className="text-xs font-semibold text-label-secondary uppercase tracking-wider mb-2">
                 Semana {semana.semana}
               </h4>
