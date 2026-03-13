@@ -70,6 +70,15 @@ export function usePlano() {
         }
       }
 
+      // Sort treinos by date within affected weeks
+      const parseDate = (d: string) => {
+        const [day, month] = d.split('/').map(Number);
+        return month * 100 + day;
+      };
+      const sortByDate = (treinos: (typeof src)[]) => treinos.sort((a, b) => parseDate(a.data) - parseDate(b.data));
+      sortByDate(next.semanas[srcSem].treinos);
+      if (tgtSem !== srcSem) sortByDate(next.semanas[tgtSem].treinos);
+
       return next;
     });
   }, []);
