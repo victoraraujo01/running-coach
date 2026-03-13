@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --color-corrida: #30D158;
+  --color-musculacao: #FF9F0A;
+  --color-descanso: #64D2FF;
+  --color-longo: #FF375F;
+  --color-surface: #1C1C1E;
+  --color-surface-2: #2C2C2E;
+  --color-surface-3: #3A3A3C;
+  --color-label: #EBEBF5;
+  --color-label-secondary: #EBEBF599;
+  --color-separator: #38383A;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  background-color: #000;
+  color: #fff;
+  min-height: 100dvh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #3A3A3C;
+  border-radius: 2px;
+}
+
+/* Hide scrollbar for week nav */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
