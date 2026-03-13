@@ -9,8 +9,8 @@ export function StatsBar({ stats }: StatsBarProps) {
   return (
     <div className="grid grid-cols-3 gap-3">
       <div className="flex items-center gap-2 bg-surface rounded-xl p-3">
-        <div className="w-8 h-8 rounded-full bg-corrida/15 flex items-center justify-center">
-          <Check size={14} className="text-corrida" />
+        <div className="w-10 h-10 min-w-10 rounded-full bg-corrida/20 flex items-center justify-center">
+          <Check size={18} className="text-corrida" />
         </div>
         <div>
           <p className="text-lg font-bold text-corrida">{stats.concluidos}</p>
@@ -19,8 +19,8 @@ export function StatsBar({ stats }: StatsBarProps) {
       </div>
 
       <div className="flex items-center gap-2 bg-surface rounded-xl p-3">
-        <div className="w-8 h-8 rounded-full bg-longo/15 flex items-center justify-center">
-          <X size={14} className="text-longo" />
+        <div className="w-10 h-10 min-w-10 rounded-full bg-longo/20 flex items-center justify-center">
+          <X size={18} className="text-longo" />
         </div>
         <div>
           <p className="text-lg font-bold text-longo">{stats.perdidos}</p>
@@ -29,8 +29,8 @@ export function StatsBar({ stats }: StatsBarProps) {
       </div>
 
       <div className="flex items-center gap-2 bg-surface rounded-xl p-3">
-        <div className="w-8 h-8 rounded-full bg-descanso/15 flex items-center justify-center">
-          <Clock size={14} className="text-descanso" />
+        <div className="w-10 h-10 min-w-10 rounded-full bg-descanso/20 flex items-center justify-center">
+          <Clock size={18} className="text-descanso" />
         </div>
         <div>
           <p className="text-lg font-bold text-descanso">{stats.pendentes}</p>
