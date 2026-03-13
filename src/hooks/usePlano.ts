@@ -44,19 +44,6 @@ export function usePlano() {
     });
   }, []);
 
-  const moveTreino = useCallback((fromSemana: number, treinoId: string, toSemana: number, toIndex: number) => {
-    setPlano(prev => {
-      if (!prev) return prev;
-      const next = structuredClone(prev);
-      const fromTreinos = next.semanas[fromSemana].treinos;
-      const fromIndex = fromTreinos.findIndex(t => t.id === treinoId);
-      if (fromIndex === -1) return prev;
-      const [moved] = fromTreinos.splice(fromIndex, 1);
-      next.semanas[toSemana].treinos.splice(toIndex, 0, moved);
-      return next;
-    });
-  }, []);
-
   return {
     plano,
     selectedWeek,
@@ -65,6 +52,5 @@ export function usePlano() {
     resetPlano,
     updateTreinoStatus,
     reorderTreinos,
-    moveTreino,
   };
 }

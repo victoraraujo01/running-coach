@@ -11,7 +11,6 @@ function App() {
     resetPlano,
     updateTreinoStatus,
     reorderTreinos,
-    moveTreino,
   } = usePlano();
 
   if (!plano) {
@@ -26,7 +25,6 @@ function App() {
       onReset={resetPlano}
       onStatusChange={updateTreinoStatus}
       onReorder={reorderTreinos}
-      onMoveTreino={moveTreino}
     />
   );
 }
