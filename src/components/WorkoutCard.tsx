@@ -1,4 +1,4 @@
-import { GripVertical } from 'lucide-react';
+import { GripVertical, ArrowUpDown } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Treino, Status } from '../types/plano';
@@ -8,9 +8,10 @@ import { StatusToggle } from './StatusToggle';
 interface WorkoutCardProps {
   treino: Treino;
   onStatusChange: (status: Status) => void;
+  onMove: () => void;
 }
 
-export function WorkoutCard({ treino, onStatusChange }: WorkoutCardProps) {
+export function WorkoutCard({ treino, onStatusChange, onMove }: WorkoutCardProps) {
   const {
     attributes,
     listeners,
@@ -64,6 +65,14 @@ export function WorkoutCard({ treino, onStatusChange }: WorkoutCardProps) {
           {treino.descricao}
         </p>
       </div>
+
+      <button
+        onClick={onMove}
+        className="p-1.5 rounded-lg text-surface-3 hover:text-label-secondary hover:bg-surface-3/50 transition-colors shrink-0"
+        aria-label="Mover atividade"
+      >
+        <ArrowUpDown size={16} />
+      </button>
     </div>
   );
 }

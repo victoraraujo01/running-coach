@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import type { PlanoTreino, Status } from '../types/plano';
+import type { PlanoTreino, Treino, Status } from '../types/plano';
 import { getWeekStats } from '../utils/stats';
 import { Header } from './Header';
 import { WeekNavigation } from './WeekNavigation';
 import { SortableWorkoutList } from './SortableWorkoutList';
 import { StatsBar } from './StatsBar';
 import { ConfirmDialog } from './ConfirmDialog';
+import { MoveModal } from './MoveModal';
 
 interface PlanDashboardProps {
   plano: PlanoTreino;
@@ -14,6 +15,7 @@ interface PlanDashboardProps {
   onReset: () => void;
   onStatusChange: (semanaIdx: number, treinoId: string, status: Status) => void;
   onReorder: (semanaIdx: number, fromIndex: number, toIndex: number) => void;
+  onMoveTreino: (sourceTreinoId: string, targetTreinoId: string, swap: boolean) => void;
 }
 
 export function PlanDashboard({
@@ -23,10 +25,17 @@ export function PlanDashboard({
   onReset,
   onStatusChange,
   onReorder,
+  onMoveTreino,
 }: PlanDashboardProps) {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [moveTarget, setMoveTarget] = useState<Treino | null>(null);
   const currentSemana = plano.semanas[selectedWeek];
   const weekStats = getWeekStats(currentSemana);
+
+  const handleMoveRequest = (treinoId: string) => {
+    const treino = currentSemana.treinos.find(t => t.id === treinoId);
+    if (treino) setMoveTarget(treino);
+  };
 
   return (
     <div className="min-h-dvh pb-8">
@@ -49,6 +58,7 @@ export function PlanDashboard({
             treinos={currentSemana.treinos}
             onReorder={(from, to) => onReorder(selectedWeek, from, to)}
             onStatusChange={(treinoId, status) => onStatusChange(selectedWeek, treinoId, status)}
+            onMove={handleMoveRequest}
           />
         </div>
       </div>
@@ -63,6 +73,19 @@ export function PlanDashboard({
           onReset();
         }}
         onCancel={() => setShowResetConfirm(false)}
+      />
+
+      <MoveModal
+        isOpen={moveTarget !== null}
+        sourceTreino={moveTarget}
+        semanas={plano.semanas}
+        onConfirm={(targetTreinoId, swap) => {
+          if (moveTarget) {
+            onMoveTreino(moveTarget.id, targetTreinoId, swap);
+          }
+          setMoveTarget(null);
+        }}
+        onCancel={() => setMoveTarget(null)}
       />
     </div>
   );
