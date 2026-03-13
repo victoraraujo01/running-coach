@@ -33,17 +33,6 @@ export function usePlano() {
     });
   }, []);
 
-  const reorderTreinos = useCallback((semanaIdx: number, fromIndex: number, toIndex: number) => {
-    setPlano(prev => {
-      if (!prev) return prev;
-      const next = structuredClone(prev);
-      const treinos = next.semanas[semanaIdx].treinos;
-      const [moved] = treinos.splice(fromIndex, 1);
-      treinos.splice(toIndex, 0, moved);
-      return next;
-    });
-  }, []);
-
   const moveTreino = useCallback((sourceTreinoId: string, targetTreinoId: string, swap: boolean) => {
     setPlano(prev => {
       if (!prev) return prev;
@@ -92,7 +81,6 @@ export function usePlano() {
     importPlano,
     resetPlano,
     updateTreinoStatus,
-    reorderTreinos,
     moveTreino,
   };
 }
