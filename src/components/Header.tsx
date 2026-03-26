@@ -1,4 +1,4 @@
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, Upload } from 'lucide-react';
 import type { PlanoTreino } from '../types/plano';
 import { getOverallStats } from '../utils/stats';
 import { ProgressRing } from './ProgressRing';
@@ -6,9 +6,10 @@ import { ProgressRing } from './ProgressRing';
 interface HeaderProps {
   plano: PlanoTreino;
   onReset: () => void;
+  onEditPlan: () => void;
 }
 
-export function Header({ plano, onReset }: HeaderProps) {
+export function Header({ plano, onReset, onEditPlan }: HeaderProps) {
   const stats = getOverallStats(plano);
 
   return (
@@ -22,14 +23,24 @@ export function Header({ plano, onReset }: HeaderProps) {
           </p>
         </div>
       </div>
-      <button
-        onClick={onReset}
-        className="p-2.5 rounded-xl bg-surface hover:bg-surface-2 text-label-secondary
-                   hover:text-label transition-all"
-        title="Resetar plano"
-      >
-        <RotateCcw size={18} />
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={onEditPlan}
+          className="p-2.5 rounded-xl bg-surface hover:bg-surface-2 text-label-secondary
+                     hover:text-label transition-all"
+          title="Importar novo YAML"
+        >
+          <Upload size={18} />
+        </button>
+        <button
+          onClick={onReset}
+          className="p-2.5 rounded-xl bg-surface hover:bg-surface-2 text-label-secondary
+                     hover:text-label transition-all"
+          title="Resetar plano"
+        >
+          <RotateCcw size={18} />
+        </button>
+      </div>
     </div>
   );
 }

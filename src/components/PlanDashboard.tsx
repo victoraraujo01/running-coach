@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import type { PlanoTreino, Treino, Status } from '../types/plano';
 import { getWeekStats } from '../utils/stats';
+import { parseYaml } from '../utils/yaml-parser';
 import { Header } from './Header';
 import { WeekNavigation } from './WeekNavigation';
 import { SortableWorkoutList } from './SortableWorkoutList';
@@ -13,6 +14,7 @@ interface PlanDashboardProps {
   selectedWeek: number;
   onSelectWeek: (index: number) => void;
   onReset: () => void;
+  onUpdatePlan: (plano: PlanoTreino) => void;
   onStatusChange: (semanaIdx: number, treinoId: string, status: Status) => void;
   onMoveTreino: (sourceTreinoId: string, targetTreinoId: string, swap: boolean) => void;
 }
@@ -22,11 +24,15 @@ export function PlanDashboard({
   selectedWeek,
   onSelectWeek,
   onReset,
+  onUpdatePlan,
   onStatusChange,
   onMoveTreino,
 }: PlanDashboardProps) {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [moveTarget, setMoveTarget] = useState<Treino | null>(null);
+  const [pendingPlan, setPendingPlan] = useState<PlanoTreino | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const currentSemana = plano.semanas[selectedWeek];
   const weekStats = getWeekStats(currentSemana);
 
@@ -35,10 +41,40 @@ export function PlanDashboard({
     if (treino) setMoveTarget(treino);
   };
 
+  const handleEditPlan = () => {
+    setImportError(null);
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    // Reset so same file can be re-selected if needed
+    e.target.value = '';
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const content = ev.target?.result as string;
+        const parsed = parseYaml(content);
+        setPendingPlan(parsed);
+      } catch (err) {
+        setImportError(err instanceof Error ? err.message : 'Erro ao processar o arquivo YAML.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <div className="min-h-dvh pb-8">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".yaml,.yml"
+        className="hidden"
+        onChange={handleFileChange}
+      />
       <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col gap-6">
-        <Header plano={plano} onReset={() => setShowResetConfirm(true)} />
+        <Header plano={plano} onReset={() => setShowResetConfirm(true)} onEditPlan={handleEditPlan} />
 
         <WeekNavigation
           semanas={plano.semanas}
@@ -70,6 +106,27 @@ export function PlanDashboard({
           onReset();
         }}
         onCancel={() => setShowResetConfirm(false)}
+      />
+
+      <ConfirmDialog
+        isOpen={pendingPlan !== null}
+        title="Importar novo plano"
+        message={pendingPlan ? `Importar "${pendingPlan.plano.nome}"? O status dos dias já preenchidos (feito/não feito) será mantido para as datas em comum.` : ''}
+        confirmLabel="Importar"
+        onConfirm={() => {
+          if (pendingPlan) onUpdatePlan(pendingPlan);
+          setPendingPlan(null);
+        }}
+        onCancel={() => setPendingPlan(null)}
+      />
+
+      <ConfirmDialog
+        isOpen={importError !== null}
+        title="Erro ao importar"
+        message={importError ?? ''}
+        confirmLabel="OK"
+        onConfirm={() => setImportError(null)}
+        onCancel={() => setImportError(null)}
       />
 
       <MoveModal

@@ -8,6 +8,7 @@ function App() {
     selectedWeek,
     setSelectedWeek,
     importPlano,
+    updatePlano,
     resetPlano,
     updateTreinoStatus,
     moveTreino,
@@ -23,6 +24,7 @@ function App() {
       selectedWeek={selectedWeek}
       onSelectWeek={setSelectedWeek}
       onReset={resetPlano}
+      onUpdatePlan={updatePlano}
       onStatusChange={updateTreinoStatus}
       onMoveTreino={moveTreino}
     />

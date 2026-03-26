@@ -17,6 +17,28 @@ export function usePlano() {
     setSelectedWeek(0);
   }, []);
 
+  const updatePlano = useCallback((newPlano: PlanoTreino) => {
+    setPlano(prev => {
+      if (!prev) return newPlano;
+      // Build map of date -> status from current plan to preserve progress
+      const statusMap = new Map<string, Status>();
+      for (const semana of prev.semanas) {
+        for (const treino of semana.treinos) {
+          statusMap.set(treino.data, treino.status);
+        }
+      }
+      // Merge: apply preserved statuses to matching dates in new plan
+      const merged = structuredClone(newPlano);
+      for (const semana of merged.semanas) {
+        for (const treino of semana.treinos) {
+          const prevStatus = statusMap.get(treino.data);
+          if (prevStatus !== undefined) treino.status = prevStatus;
+        }
+      }
+      return merged;
+    });
+  }, []);
+
   const resetPlano = useCallback(() => {
     clearPlano();
     setPlano(null);
@@ -88,6 +110,7 @@ export function usePlano() {
     selectedWeek,
     setSelectedWeek,
     importPlano,
+    updatePlano,
     resetPlano,
     updateTreinoStatus,
     moveTreino,
