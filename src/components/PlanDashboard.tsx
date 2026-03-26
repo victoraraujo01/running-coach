@@ -8,6 +8,7 @@ import { SortableWorkoutList } from './SortableWorkoutList';
 import { StatsBar } from './StatsBar';
 import { ConfirmDialog } from './ConfirmDialog';
 import { MoveModal } from './MoveModal';
+import { ZonesModal } from './ZonesModal';
 
 interface PlanDashboardProps {
   plano: PlanoTreino;
@@ -29,6 +30,7 @@ export function PlanDashboard({
   onMoveTreino,
 }: PlanDashboardProps) {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showZones, setShowZones] = useState(false);
   const [moveTarget, setMoveTarget] = useState<Treino | null>(null);
   const [pendingPlan, setPendingPlan] = useState<PlanoTreino | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
@@ -74,7 +76,12 @@ export function PlanDashboard({
         onChange={handleFileChange}
       />
       <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col gap-6">
-        <Header plano={plano} onReset={() => setShowResetConfirm(true)} onEditPlan={handleEditPlan} />
+        <Header
+          plano={plano}
+          onReset={() => setShowResetConfirm(true)}
+          onEditPlan={handleEditPlan}
+          onShowZones={() => setShowZones(true)}
+        />
 
         <WeekNavigation
           semanas={plano.semanas}
@@ -127,6 +134,12 @@ export function PlanDashboard({
         confirmLabel="OK"
         onConfirm={() => setImportError(null)}
         onCancel={() => setImportError(null)}
+      />
+
+      <ZonesModal
+        isOpen={showZones}
+        zonas={plano.zonas}
+        onClose={() => setShowZones(false)}
       />
 
       <MoveModal

@@ -1,15 +1,17 @@
-import { RotateCcw, Upload } from 'lucide-react';
+import { Upload, RotateCcw, Gauge } from 'lucide-react';
 import type { PlanoTreino } from '../types/plano';
 import { getOverallStats } from '../utils/stats';
 import { ProgressRing } from './ProgressRing';
+import { OverflowMenu } from './OverflowMenu';
 
 interface HeaderProps {
   plano: PlanoTreino;
   onReset: () => void;
   onEditPlan: () => void;
+  onShowZones: () => void;
 }
 
-export function Header({ plano, onReset, onEditPlan }: HeaderProps) {
+export function Header({ plano, onReset, onEditPlan, onShowZones }: HeaderProps) {
   const stats = getOverallStats(plano);
 
   return (
@@ -23,24 +25,24 @@ export function Header({ plano, onReset, onEditPlan }: HeaderProps) {
           </p>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <button
-          onClick={onEditPlan}
-          className="p-2.5 rounded-xl bg-surface hover:bg-surface-2 text-label-secondary
-                     hover:text-label transition-all"
-          title="Importar novo YAML"
-        >
-          <Upload size={18} />
-        </button>
-        <button
-          onClick={onReset}
-          className="p-2.5 rounded-xl bg-surface hover:bg-surface-2 text-label-secondary
-                     hover:text-label transition-all"
-          title="Resetar plano"
-        >
-          <RotateCcw size={18} />
-        </button>
-      </div>
+      <OverflowMenu items={[
+        {
+          label: 'Importar novo YAML',
+          icon: <Upload size={15} />,
+          onClick: onEditPlan,
+        },
+        {
+          label: 'Zonas de pace',
+          icon: <Gauge size={15} />,
+          onClick: onShowZones,
+        },
+        {
+          label: 'Resetar plano',
+          icon: <RotateCcw size={15} />,
+          onClick: onReset,
+          danger: true,
+        },
+      ]} />
     </div>
   );
 }

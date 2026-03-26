@@ -1,5 +1,5 @@
 import yaml from 'js-yaml';
-import type { PlanoTreino, Semana, Treino, Categoria, DiaSemana } from '../types/plano';
+import type { PlanoTreino, Semana, Treino, Categoria, DiaSemana, Zona } from '../types/plano';
 
 interface RawTreino {
   data: string;
@@ -14,12 +14,19 @@ interface RawSemana {
   treinos: RawTreino[];
 }
 
+interface RawZona {
+  nome: string;
+  pace_min: string;
+  pace_max: string;
+}
+
 interface RawPlano {
   plano: {
     nome: string;
     duracao_semanas: number;
   };
   semanas: RawSemana[];
+  zonas?: RawZona[];
 }
 
 const CATEGORIAS_VALIDAS: Categoria[] = ['Corrida', 'Musculação', 'Descanso', 'Longo'];
@@ -71,11 +78,18 @@ export function parseYaml(content: string): PlanoTreino {
     };
   });
 
+  const zonas: Zona[] | undefined = raw.zonas?.map((z) => ({
+    nome: z.nome,
+    pace_min: z.pace_min,
+    pace_max: z.pace_max,
+  }));
+
   return {
     plano: {
       nome: raw.plano.nome,
       duracao_semanas: raw.plano.duracao_semanas || semanas.length,
     },
     semanas,
+    ...(zonas?.length ? { zonas } : {}),
   };
 }

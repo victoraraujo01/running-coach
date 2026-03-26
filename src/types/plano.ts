@@ -2,6 +2,12 @@ export type Categoria = 'Corrida' | 'Musculação' | 'Descanso' | 'Longo';
 export type Status = 'pendente' | 'concluido' | 'perdido';
 export type DiaSemana = 'SEG' | 'TER' | 'QUA' | 'QUI' | 'SEX' | 'SÁB' | 'DOM';
 
+export interface Zona {
+  nome: string;
+  pace_min: string;
+  pace_max: string;
+}
+
 export interface Treino {
   id: string;
   data: string;
@@ -25,4 +31,5 @@ export interface PlanoInfo {
 export interface PlanoTreino {
   plano: PlanoInfo;
   semanas: Semana[];
+  zonas?: Zona[];
 }
