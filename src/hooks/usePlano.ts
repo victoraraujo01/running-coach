@@ -2,9 +2,29 @@ import { useState, useCallback, useEffect } from 'react';
 import type { PlanoTreino, Status } from '../types/plano';
 import { loadPlano, savePlano, clearPlano } from '../utils/storage';
 
+function findCurrentWeekIndex(plano: PlanoTreino): number {
+  const today = new Date();
+  const todayVal = (today.getMonth() + 1) * 100 + today.getDate();
+
+  const parseDate = (d: string) => {
+    const [day, month] = d.split('/').map(Number);
+    return month * 100 + day;
+  };
+
+  for (let i = 0; i < plano.semanas.length; i++) {
+    const dates = plano.semanas[i].treinos.map(t => parseDate(t.data));
+    const maxDate = Math.max(...dates);
+    if (maxDate >= todayVal) return i;
+  }
+  return plano.semanas.length - 1;
+}
+
 export function usePlano() {
   const [plano, setPlano] = useState<PlanoTreino | null>(() => loadPlano());
-  const [selectedWeek, setSelectedWeek] = useState(0);
+  const [selectedWeek, setSelectedWeek] = useState(() => {
+    const saved = loadPlano();
+    return saved ? findCurrentWeekIndex(saved) : 0;
+  });
 
   useEffect(() => {
     if (plano) {
@@ -14,10 +34,11 @@ export function usePlano() {
 
   const importPlano = useCallback((newPlano: PlanoTreino) => {
     setPlano(newPlano);
-    setSelectedWeek(0);
+    setSelectedWeek(findCurrentWeekIndex(newPlano));
   }, []);
 
   const updatePlano = useCallback((newPlano: PlanoTreino) => {
+    setSelectedWeek(findCurrentWeekIndex(newPlano));
     setPlano(prev => {
       if (!prev) return newPlano;
       // Build map of date -> status from current plan to preserve progress
